@@ -1,20 +1,21 @@
-# Dockerfile para Evolution API v2 (teste gratuito)
+# Dockerfile para Evolution API v2 no Render
 FROM node:18-alpine
 
 # Diretório de trabalho
 WORKDIR /app
 
-# Copia package.json e package-lock.json (se houver)
-COPY package*.json ./
+# Instala git para clonar o repositório e bash
+RUN apk add --no-cache git bash
 
-# Instala dependências
-RUN npm install --production
+# Clona o repositório oficial do Evolution API
+RUN git clone https://github.com/AtendAI/evolution-api.git . 
 
-# Copia o restante do código
-COPY . .
+# Instala dependências de produção
+RUN npm install --omit=dev
 
-# Expõe a porta que o Evolution API usa
+# Expõe a porta padrão da Evolution API
 EXPOSE 8080
 
 # Comando para iniciar a API
 CMD ["node", "index.js"]
+
